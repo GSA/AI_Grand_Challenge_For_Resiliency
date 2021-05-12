@@ -53,7 +53,7 @@ We know that the data created and managed at the federal level is not exhaustive
 2. What are the relationships between the Federal policy responses and outcomes? 
   - Are there data gaps that would impede the ability to analyze the outcomes of policies? 
   - How can practices for regulatory review be improved and better supported with data?
-4. In what ways has COVID-19 related regulatory activity impacted Americans? What can we add or change to the methods for representing, or processing regulatory information that will improve our ability to answer the above questions?
+3. In what ways has COVID-19 related regulatory activity impacted Americans? What can we add or change to the methods for representing, or processing regulatory information that will improve our ability to answer the above questions?
 
 
 
