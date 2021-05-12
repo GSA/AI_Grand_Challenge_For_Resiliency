@@ -1,6 +1,6 @@
 # Request for Feedback
 
-**AI Grand Challenge for Resiliency:**
+**AI Grand Challenge for Resilience:**
 Impact of U.S. Government Policy on COVID-19 using Natural Language Processing &amp; Text Analytics
 
 ## Agency
