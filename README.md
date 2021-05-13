@@ -63,8 +63,6 @@ Regulations are primarily expressed in unstructured natural language text, and r
 
 The following datasets associated with this challenge are key to understanding the government response to the pandemic.
 
-### Candidate datasets associated with this challenge include:
-
 Documents published on <a href="http://regulations.gov"> https://www.regulations.gov/</a>, reflecting federal level rule changes, additions, and exemptions;
 Information on the Regulations.gov API <a href="https://open.gsa.gov/api/regulationsgov/">can be found here</a>. 
 The Challenge team pulled ~4GB of <a href="https://ai-challenge-regulations-gov-data.s3.amazonaws.com/regulations-gov-data.zip">starter data here</a>. This data contains documents pulled from Regulations.gov under the keyword search terms “COVID”, “COVID-19”, and “coronavirus” from Nov 2020-Mar 2021.The docs are a mix of JSON, HTML, and PDF formats.
