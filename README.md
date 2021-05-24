@@ -65,24 +65,24 @@ The following datasets associated with this challenge are key to understanding t
 
 Documents published on <a href="http://regulations.gov"> https://www.regulations.gov/</a>, reflecting federal level rule changes, additions, and exemptions;
 Information on the Regulations.gov API <a href="https://open.gsa.gov/api/regulationsgov/">can be found here</a>. 
-The Challenge team pulled ~4GB of <a href="https://ai-challenge-regulations-gov-data.s3.amazonaws.com/regulations-gov-data.zip">starter data here</a>. This data contains documents pulled from Regulations.gov under the keyword search terms “COVID”, “COVID-19”, and “coronavirus” from Nov 2020-Mar 2021.The docs are a mix of JSON, HTML, and PDF formats.
+The Challenge team pulled ~4GB of <a href="https://ai-challenge-regulations-gov-data.s3.amazonaws.com/regulations-gov-data.zip">starter data here</a>. This data contains documents pulled from Regulations.gov under the keyword search terms “COVID”, “COVID-19”, and “coronavirus” from Nov 2020-Mar 2021. The docs are a mix of JSON, HTML, and PDF formats.
 
-- The Code of Federal Regulations (CFR) from both <a href="https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/tree/main/Data/CFR-2019">2019</a> and <a href="https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/tree/main/Data/CFR-2020">2020</a>;
+- The Code of Federal Regulations (CFR) from both <a href="https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/tree/main/Data/CFR-2019">2019</a> and <a href="https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/tree/main/Data/CFR-2020">2020</a>
 -	Search <a href="https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/blob/main/Data/Coronavirus.gov%20Search%20Logs-20210309T185408Z-001.zip">logs</a> from coronavirus.gov, which provide some insight into the
 questions the federal government received from the public at different stages
-of the pandemic;
--	An <a href="https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/blob/main/Data/2020%20Covid%20Relevant%20EOs-20210309T190708Z-001.zip">archive</a> of Executive Orders post-pandemic 2020;
+of the pandemic
+-	An <a href="https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/blob/main/Data/2020%20Covid%20Relevant%20EOs-20210309T190708Z-001.zip">archive</a> of Executive Orders post-pandemic 2020
 
 We anticipate that solvers will bring in additional data sets such as census, public health-related, and economic data sets depending on their approach to a solution.
 
-## Tools:
+## Tools
 
 Regulatory analytics is a narrow domain, but to the extent possible we encourage solvers to leverage existing open source tools such as <a href= "https://18f.gsa.gov/what-we-deliver/eregulations">eRegulations</a>, <a href="https://www.quantgov.org/">Quantgov</a>, <a href="https://github.com/dod-advana/gamechanger-data">Gamechanger</a>, and <a href="https://github.com/mitre/policynet">Policynet</a> in their solutions to this challenge.
 
 Also, we are interested in solutions that leverage ontologies, XML, and other formalisms, and contribute to knowledge generation in the regulatory ontology space. We encourage solvers to present solutions that leverage prior work in this area. Research presented at <a href="http://jurix.nl/">JURIX</a> and <a href="https://www.remep.net/">ReMep</a>, and packages such as <a href="https://github.com/RinkeHoekstra/lkif-core">LKIF</a>, <a href="https://jogracia.github.io/ontolex-lexicog/">Lexicog</a>, <a href="http://www.metalex.eu/">CEN Metalex</a>, <a href="http://www.akomantoso.org/">Akomantoso</a> and <a href="https://github.com/usgpo/uslm/">USLM</a> are good places to start when considering technical approaches to this challenge.
 
 
-## Stakeholders:
+## Stakeholders
 Personnel from the GSA Office of Regulation Management are key stakeholders for this challenge, have helped to frame it, and will be part of the cohort of challenge evaluators.  Part of the Office of Regulation Management’s mission is to: “Support Federal agencies as they develop regulations, including management of agencies’ recordkeeping systems, known as dockets, as well as review of public comments.” During the course of the challenge, personnel from the Office of Regulation Management will be made available during public meetings, such as webinars, to ensure that solvers have the information they need to ensure their solutions are relevant to the regulatory process.
 
 Additionally, organizations like the Undersecretary of Defense - Comptroller’s Digital Transformation Office is sponsoring technology modernization efforts around policy discovery, evaluation, and analytics. The Gamechanger initiative is an example of one such activity, which has <a href="https://github.com/dod-advana/gamechanger-data">open sourced their data science and engineering tools</a> to the public.
@@ -93,13 +93,13 @@ Data-driven policy analysis has the potential to improve and better coordinate p
 
 The TTS Challenge Team is considering accepting submissions across the following three categories once the challenge competition begins:
 
-- **Text Summarization, Classification, &amp; Topic Modeling:** 
+- **Text Summarization, Classification, &amp; Topic Modeling** 
 Using natural language processing techniques, describe the types of changes and updates made to federal regulations, policies, and rules.
 
-- **Named Entity Recognition, Data Annotation, &amp; Document Linking:**
+- **Named Entity Recognition, Data Annotation, &amp; Document Linking**
 Combining natural language processing (NLP) and knowledge representation techniques to create policy-domain specific knowledge graphs, which show relationships between organizations, topics, and policy issuances. Alternatively, leveraging labeling and annotation methods to create high quality, enriched datasets to be used for training NLP or AI/ML models for policy domain-specific tasks.
 
-- **Impact Modeling:** 
+- **Impact Modeling** 
 Quantitatively understanding the impact of policy on resilience. The solver will leverage analytic techniques from disciplines like operations research, statistical analysis, and mathematical modeling to enable inferences about the social and economic impact of COVID-19 related policy changes. The provided solution must include an NLP and/or other text analytics, but can be augmented with other data, analytic techniques, and data visualization.
 
 ## Judging Criteria
