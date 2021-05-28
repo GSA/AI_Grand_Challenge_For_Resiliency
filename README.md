@@ -1,3 +1,5 @@
+### RFF Info Session 1: June 3rd, 2021 3:00pm-4:30pm. [Register Here](https://www.eventbrite.com/e/information-session-ai-grand-challenge-information-session-registration-157164385909)
+
 # Request for Feedback
 
 **AI Grand Challenge for Resilience:**
