@@ -13,6 +13,9 @@ For a comprehensive list of NLP sources, see [here](https://github.com/keon/awes
 * [Regulations.gov](https://www.regulations.gov/)
 
 	- This is a platform that publishes public policy and rule changes made by the federal government in. They come from through the Federal Register and are associated with a variety of contributing and non-contributing federal agencies. Announcement includes a mix of HTML, Word docs, PDFs, and JSON files. The HTML file contains the text of the announcement whereas the JSON file contains metadata. Some important information in the JSON files include the subject, topics, link to attached documents, and posted date. 
+	- Information on the Regulations.gov API <a href="https://open.gsa.gov/api/regulationsgov/">can be found here</a>. 
+	- The Challenge team pulled ~4GB of <a href="https://ai-challenge-regulations-gov-data.s3.amazonaws.com/regulations-gov-data.zip">starter data here</a>. This data contains documents pulled from Regulations.gov under the keyword search terms “COVID”, “COVID-19”, and “coronavirus” from Nov 2020-Mar 2021. The docs are a mix of JSON, HTML, and PDF formats.
+	
 
 * [Code of Federal Regulations](https://www.govinfo.gov/app/collection/cfr/2020/) \[[2019](https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/tree/main/Data/CFR-2019) | [2020](https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/tree/main/Data/CFR-2020)\]
 
