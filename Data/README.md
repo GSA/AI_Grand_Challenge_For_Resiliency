@@ -1,6 +1,6 @@
 # ADDITIONAL RESOURCES
 
-This document contains additional NLP resources relevant to the challenge. It is divided into three categories: data, software and literature. Note these are merely a fraction of NLP resources available: if you would like to contribute, please either submit a pull request. Note we can only publish non-commerical and open-source tools and libraries and we cannot accept datasets published by state and local entities.
+This document contains additional NLP resources relevant to the challenge. It is divided into three categories: data, software and literature. Note these are merely a fraction of NLP resources available: if you would like to contribute, please either submit a pull request. Note we can only publish non-commerical and open-source tools and libraries and we cannot host datasets published by state and local entities. For commercial tools and state and local data, contributors are encouraged to fork this repo and add to their version.
 
 For a comprehensive list of NLP sources, see [here](https://github.com/keon/awesome-nlp).
 
@@ -12,11 +12,11 @@ For a comprehensive list of NLP sources, see [here](https://github.com/keon/awes
 
 * [Regulations.gov](https://www.regulations.gov/)
 
-	- This is a platform that publishes all policy changes and regulations passed by the government in any shape or form. They come from through the Federal Register and are associated with a variety of government agencies. Each regulation has a HTM and JSON file. The HTM file contains the regulation in readable format whereas the JSON file contains metadata about the regulation. Some important information in the JSON files include the subject, topics, link to the PDF file, and posted date. 
+	- This is a platform that publishes public policy and rule changes made by the federal government in. They come from through the Federal Register and are associated with a variety of contributing and non-contributing federal agencies. Announcement includes a mix of HTML, Word docs, PDFs, and JSON files. The HTML file contains the text of the announcement whereas the JSON file contains metadata. Some important information in the JSON files include the subject, topics, link to attached documents, and posted date. 
 
 * [Code of Federal Regulations](https://www.govinfo.gov/app/collection/cfr/2020/) \[[2019](https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/tree/main/Data/CFR-2019) | [2020](https://github.com/GSA/AI_Grand_Challenge_For_Resiliency/tree/main/Data/CFR-2020)\]
 
-	- CFR consists of all regulations passed by various executive entities of the federal government. They are divided up into 50 titles (subject areas), allowing competitors to view the impact of COVID-19 across different industries and sectors. The data is stored in a XML format.
+	- The CFR is the codification of the general and permanent rules published in the Federal Register by the departments and agencies of the Federal Government produced by the Office of the Federal Register (OFR) and the Government Publishing Office. It is divided up into 50 titles (subject areas), allowing competitors to view the impact of COVID-19 across different industries and sectors. The data is stored in XML format.
 
 * [Coronavirus.gov](https://www.coronavirus.gov/)
 
