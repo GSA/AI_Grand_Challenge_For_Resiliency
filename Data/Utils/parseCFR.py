@@ -15,39 +15,34 @@ class CFR():
     """
     
     def __init__(self, 
-        src):
+        *srcs):
         """Inits attributes.
 
         Args:
-            src : 
-                * source file (str) 
-                * files (list[str])
-                * directory containing files (str, satisfies os.path.isdir).
+            srcs: 
+                * source file
+                * directory containing files (str, satisfies os.path.isdir)
         """
-        
-        if isinstance(src, list):
-            self._fnames = src
-        elif os.path.isdir(src):
-            self._fnames = [fname for fname in os.listdir(src) if fname.endswith(".txt")]
-        else:
-            self._fnames = [src]
+
+        self._fnames = []
+        for src in srcs:
+            if os.path.isdir(src):
+                for subdir, dirs, files in os.walk(src):
+                    for file in files:
+                        if file.endswith("xml"):
+                            self._fnames += [os.path.join(subdir, file)]
+            else:
+                self_fnames.append(src)
 
         assert self._fnames
         
-        self._trees = [ET.parse(fname) for fname in self._fnames]
-        self._roots = [tree.getroot() for tree in self._trees]
-        
-    def writeToTextFile(self, 
-        target_files: list):
-        """Writes CFR data to text file
-        
-        Params:
-            target_files (list[str]): path for output text files.
-        """
+    def writeToTextFile(self):
+        """Writes CFR data to text file"""
 
-        for target_file in target_files:
-            with open(target_file, "w") as tfile:
-                tfile.write(ET.tostring(self._roots, encoding='utf-8', method='text').decode("utf-8"))
+        for fname in self._fnames:
+            with open(fname.replace(".xml", ".txt"), "w") as tfile:
+                root = ET.parse(fname).getroot()
+                tfile.write(ET.tostring(root, encoding='utf-8', method='text').decode("utf-8"))
     
     def getData(self) -> (pd.DataFrame, pd.DataFrame):
         """Iterates through XML Element trees to retrieve regulation structure and data
@@ -58,22 +53,32 @@ class CFR():
         """
         
         parts = pd.DataFrame()
-        data = pd.DataFrame(columns=["SECTTEXT"])
-    
-        for tree in self._trees:
+        data = pd.DataFrame(columns=["TITLE", "DATE", "SECTTEXT", "SECTNO"])
+        
+        for fname in self._fnames:
+
+            tree = ET.parse(fname)
+
             for title in tree.iter("TITLE"):
+
                 title_name = title.find("CFRTITLE").find("TITLEHD").find("HD").text
+                date = [d for d in tree.iter("DATE")][0].text
+
                 for part in title.iter("PART"):
                     if part.tag == "PART":
 
                         part_info = {
-                            "TITLE": title_name
+                            "TITLE": title_name,
+                            "DATE": date
                         }
                         
                         for child in part:
                             if child.tag == "EAR" or child.tag == "RESERVED":
                                 part_info["PART"] = child.text
-                                part_info["PART NUMBER"] = re.findall("\d+\S*", child.text)[0]
+                                try:
+                                    part_info["PART NUMBER"] = re.findall("\d+\S*", child.text)[0]
+                                except:
+                                    part_info["PART NUMBER"] = child.text
                             elif child.tag == "HD":
                                 part_info["PART DESC"] = child.text
 
@@ -92,7 +97,8 @@ class CFR():
                                 curr_subpart = subpart.find("RESERVED").text
                                 sect_info["SUBPART"] = curr_subpart
                                 data = data.append(sect_info, ignore_index=True)
-                                
+                            
+                            # add section datat
                             for section in subpart.iter("SECTION"):
                                 
                                 sect_info = copy.deepcopy(part_info)
@@ -110,15 +116,17 @@ class CFR():
                                         else:
                                             sect_info["SECTTEXT"] += ''.join(child.itertext()).strip() 
                                         sect_info["SUBPART"] = curr_subpart
-                                        data = data.append(sect_info, ignore_index=True)
+                                
+                                data = data.append(sect_info, ignore_index=True)
 
+                        # add section data for those not in subparts
                         for section in part.iter("SECTION"):
                             sect_info = copy.deepcopy(part_info)
                             sect_info["SECTTEXT"] = ""
                             
                             for child in section:
                                 if child.tag == "SECTNO": 
-                                    sect_info["SECTNO"] = child.text.split()[1]
+                                    sect_info["SECTNO"] = child.text.split()[-1]
                                 elif child.tag == "SUBJECT": 
                                     sect_info["SECT SUBJECT"] = child.text
                                 elif child.tag == "P":
@@ -126,7 +134,10 @@ class CFR():
                             
                             # check if section already added while iterating through subparts
                             # if not, add here
-                            idx = data[(data["SECTNO"] == sect_info["SECTNO"]) & (data["TITLE"] == sect_info["TITLE"])].index
+                            idx = data[(data["SECTNO"] == sect_info["SECTNO"]) & 
+                                        (data["TITLE"] == sect_info["TITLE"]) &
+                                        (data["DATE"] == sect_info["DATE"])].index
+
                             if len(idx) == 0:
                                 data = data.append(sect_info, ignore_index=True)
 
