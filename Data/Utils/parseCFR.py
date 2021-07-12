@@ -4,14 +4,13 @@ import pandas as pd
 import os
 import re
 import copy
+import logging
 
 class CFR():
     """Class to parse data from CFR XML Title documents.
 
     Attributes:
         _fnames (list[str]) : path to files
-        _trees (list[xml.etree.ElementTree]) : ElementTree for Titles
-        _roots (list) : root of trees
     """
     
     def __init__(self, 
@@ -32,36 +31,48 @@ class CFR():
                         if file.endswith("xml"):
                             self._fnames += [os.path.join(subdir, file)]
             else:
-                self_fnames.append(src)
+                if src.endswith(".xml"):
+                    self._fnames.append(src)
 
         assert self._fnames
         
-    def writeToTextFile(self):
+    def writeToTextFile(self) -> None:
         """Writes CFR data to text file"""
 
         for fname in self._fnames:
             with open(fname.replace(".xml", ".txt"), "w") as tfile:
                 root = ET.parse(fname).getroot()
                 tfile.write(ET.tostring(root, encoding='utf-8', method='text').decode("utf-8"))
+                
+                logging.debug("Wrote data to text file: {}".format(fname.replace(".xml", ".txt")))
     
     def getData(self) -> (pd.DataFrame, pd.DataFrame):
         """Iterates through XML Element trees to retrieve regulation structure and data
         
         Returns:
-            parts (pd.DataFrame): Information for all parts in Title, akin to Table of Contents
             data (pd.DataFrame): Title information down to the Section level
+            parts (pd.DataFrame): Information for all parts in Title, akin to Table of Contents
         """
         
+        data = pd.DataFrame(columns=["TITLE", "DATE", "TEXT", "SECTNO"])
         parts = pd.DataFrame()
-        data = pd.DataFrame(columns=["TITLE", "DATE", "SECTTEXT", "SECTNO"])
         
         for fname in self._fnames:
 
+            logging.debug("File: {}".format(fname))
             tree = ET.parse(fname)
 
             for title in tree.iter("TITLE"):
-
-                title_name = title.find("CFRTITLE").find("TITLEHD").find("HD").text
+                
+                title_name = ""
+                if title.find("CFRTITLE"):
+                    title_name = title.find("CFRTITLE").find("TITLEHD").find("HD").text
+                elif title.find("LRH"):
+                    title_name = title.find("LRH").text
+                
+                if title_name == "":
+                    logging.warning("Could not find name of title for file: ".format(fname))
+                    
                 date = [d for d in tree.iter("DATE")][0].text
 
                 for part in title.iter("PART"):
@@ -79,6 +90,7 @@ class CFR():
                                     part_info["PART NUMBER"] = re.findall("\d+\S*", child.text)[0]
                                 except:
                                     part_info["PART NUMBER"] = child.text
+                                    logging.warning("Could not find name of part: ".format(child.text))
                             elif child.tag == "HD":
                                 part_info["PART DESC"] = child.text
 
@@ -87,7 +99,7 @@ class CFR():
                         for subpart in part.iter("SUBPART"):
                             
                             sect_info = copy.deepcopy(part_info)
-                            sect_info["SECTTEXT"] = ""
+                            sect_info["TEXT"] = ""
                             
                             curr_subpart = ""
                             try:
@@ -98,31 +110,52 @@ class CFR():
                                 sect_info["SUBPART"] = curr_subpart
                                 data = data.append(sect_info, ignore_index=True)
                             
-                            # add section datat
+                            # pull section data
                             for section in subpart.iter("SECTION"):
                                 
                                 sect_info = copy.deepcopy(part_info)
-                                sect_info["SECTTEXT"] = ""
+                                sect_info["TEXT"] = ""
                                     
                                 for child in section: 
+                                    
+                                    # check if section is null
+                                    if not child.find("P"): break
 
                                     if child.tag == "SECTNO": 
                                         sect_info["SECTNO"] = child.text.split()[-1]
                                     elif child.tag == "SUBJECT": 
                                         sect_info["SECT SUBJECT"] = child.text
                                     elif child.tag == "P":
-                                        if "SECTTEXT" not in sect_info.keys():
-                                            sect_info["SECTTEXT"] = ''.join(child.itertext()).strip() 
-                                        else:
-                                            sect_info["SECTTEXT"] += ''.join(child.itertext()).strip() 
-                                        sect_info["SUBPART"] = curr_subpart
+                                        sect_info["TEXT"] += ''.join(child.itertext()).strip() 
                                 
-                                data = data.append(sect_info, ignore_index=True)
+                                if sect_info["TEXT"] != "":
+                                    data = data.append(sect_info, ignore_index=True)
+                            
+                            # pull appendix data
+                            for appendix in subpart.iter("APPENDIX"):
+                                
+                                appendix_info = copy.deepcopy(part_info)
+                                appendix_info["TEXT"] = ""
+                                
+                                # check if appendix is null
+                                if not appendix.find("EAR"): continue
+                                appendix_info["APPENDIX NO"] = appendix.find("EAR").text
+                                appendix_info["APPENDIX SUBJECT"] = appendix.find("HD").text
+                                
+                                for child in appendix:
+                                    if child.tag == "P":
+                                        appendix_info["TEXT"] += ''.join(child.itertext()).strip() 
+                                        
+                                if appendix_info["TEXT"] != "":
+                                    data = data.append(appendix_info, ignore_index=True)
 
-                        # add section data for those not in subparts
+                        # pull section data not in subparts
                         for section in part.iter("SECTION"):
                             sect_info = copy.deepcopy(part_info)
-                            sect_info["SECTTEXT"] = ""
+                            sect_info["TEXT"] = ""
+                            
+                            # check if section is null
+                            if not section.find("P"): continue
                             
                             for child in section:
                                 if child.tag == "SECTNO": 
@@ -130,7 +163,7 @@ class CFR():
                                 elif child.tag == "SUBJECT": 
                                     sect_info["SECT SUBJECT"] = child.text
                                 elif child.tag == "P":
-                                    sect_info["SECTTEXT"] += ''.join(child.itertext()).strip()  
+                                    sect_info["TEXT"] += ''.join(child.itertext()).strip()  
                             
                             # check if section already added while iterating through subparts
                             # if not, add here
@@ -140,6 +173,38 @@ class CFR():
 
                             if len(idx) == 0:
                                 data = data.append(sect_info, ignore_index=True)
+                                
+                        # pull appendix data not in subparts
+                        for appendix in part.iter("APPENDIX"):
+                                
+                            appendix_info = copy.deepcopy(part_info)
+                            appendix_info["TEXT"] = ""
+
+                            # check if appendix is null
+                            if not appendix.find("EAR"): continue
+                            appendix_info["APPENDIX NO"] = appendix.find("EAR").text
+                            appendix_info["APPENDIX SUBJECT"] = appendix.find("HD").text
+
+                            for child in appendix:
+                                if child.tag == "P":
+                                    appendix_info["TEXT"] += ''.join(child.itertext()).strip() 
+                                    
+                            idx = data[(data["APPENDIX NO"] == appendix_info["APPENDIX NO"]) & 
+                                        (data["TITLE"] == appendix_info["TITLE"]) &
+                                        (data["DATE"] == appendix_info["DATE"])].index
+
+                            if len(idx) == 0 and appendix_info["TEXT"] != "":
+                                data = data.append(appendix_info, ignore_index=True)
 
         return data, parts
-        
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s - %(levelname)s - %(message)s',
+                        datefmt='%H:%M:%S')
+
+    # starting from Utils folder
+    data_root = "/".join(os.getcwd().split("/")[:-2]) + "/Data"
+
+    cfr = CFR(data_root + "/CFR-2019/title-1", data_root + "/CFR-2019/title-2")
+    data, parts = cfr.getData()
