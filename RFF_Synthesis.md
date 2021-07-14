@@ -25,6 +25,4 @@ The team has completed RFF response synthesis. Below is a snapshot of the themes
 * Provide opportunities to connect with experts, problem owners, users, and other stakeholders along the way. 
 * Share information and expertise.
 
-A full list of the feedback recieved can be found [here](https://docs.google.com/spreadsheets/d/1rupgYBQX0dkFhwCV6X_-Z94iFOYzWXEbSjEgbjjRlfk/edit#gid=0).
-
 
